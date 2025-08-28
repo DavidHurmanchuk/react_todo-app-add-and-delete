@@ -34,7 +34,7 @@ export const App: React.FC = () => {
   const [tempTodo, setTempTodo] = useState<Todo | null>(null);
 
   const inputRef = useRef<HTMLInputElement>(null);
-  
+
   const [todoToDelete, setTodoToDelete] = useState<number[]>([]);
 
   useEffect(() => {
@@ -101,22 +101,21 @@ export const App: React.FC = () => {
   };
 
   const getFilteredTodos = (
-    todosToFilter: Todo[],
-    qureyToFilter: string,
-  ): Todo[] => {
-    let todosCopy = [...todosToFilter];
+  todosToFilter: Todo[],
+  queryToFilter: FilterQuery,
+): Todo[] => {
+  switch (queryToFilter) {
+    case FilterQuery.Active:
+      return todosToFilter.filter(todo => !todo.completed);
 
-    switch (qureyToFilter) {
-      case 'Active':
-        todosCopy = todosCopy.filter(todo => todo.completed === false);
-        break;
-      case 'Completed':
-        todosCopy = todosCopy.filter(todo => todo.completed === true);
-        break;
-    }
+    case FilterQuery.Completed:
+      return todosToFilter.filter(todo => todo.completed);
 
-    return todosCopy;
-  };
+    case FilterQuery.All:
+    default:
+      return todosToFilter;
+  }
+};
 
   const deleteTodo = async (todoId: number) => {
     setTodoToDelete(prev => [...prev, todoId]);
